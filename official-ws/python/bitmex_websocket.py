@@ -22,7 +22,7 @@ class BitMEXWebsocket:
     # Don't grow a table larger than this amount. Helps cap memory usage.
     MAX_TABLE_LEN = 200
 
-    def __init__(self, endpoint, symbol, api_key=None, api_secret=None, subscriptions=DEFAULT_SUBS):
+    def __init__(self, endpoint, symbol=None, api_key=None, api_secret=None, subscriptions=DEFAULT_SUBS):
         '''Connect to the websocket and initialize data stores.'''
         self.logger = logging.getLogger(__name__)
         self.logger.debug("Initializing WebSocket.")
@@ -158,7 +158,7 @@ class BitMEXWebsocket:
 
         # Some subscriptions need to have the symbol appended.
         subscriptions_full = map(lambda sub: (
-            sub if sub in NO_SYMBOL_SUBS
+            sub if self.symbol is None or sub in NO_SYMBOL_SUBS
             else (sub + ':' + self.symbol)
         ), subscriptions)
 
